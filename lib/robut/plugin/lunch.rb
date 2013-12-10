@@ -2,11 +2,11 @@
 class Robut::Plugin::Lunch
   include Robut::Plugin
  
-  def default_places
+  def self.default_places
     @@list_place
   end
 
-  def default_places=(places)
+  def self.default_places=(places)
     @@list_places = Array(places).uniq
   end
 
