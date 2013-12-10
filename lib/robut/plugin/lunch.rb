@@ -65,7 +65,7 @@ class Robut::Plugin::Lunch
 
   # Returns the list of lunch places we know about.
   def places
-    store["lunch_places"] ||= self.default_places || []
+    store["lunch_places"] ||= Robut::Plugin::Lunch.default_places || []
   end
 
   # Sets the list of lunch places to +v+
