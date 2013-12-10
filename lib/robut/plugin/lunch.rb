@@ -7,7 +7,7 @@ class Robut::Plugin::Lunch
   end
 
   def self.default_places=(places)
-    @@list_places = Array(places).uniq
+    @@list_place = Array(places).uniq
   end
 
   # Returns a description of how to use this plugin
