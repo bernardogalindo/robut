@@ -3,7 +3,12 @@ class Robut::Plugin::Lunch
   include Robut::Plugin
   
   def self.places=(place_list)
-    store["lunch_places"] = (Array(place_list)).uniq
+    @places = (Array(place_list)).uniq
+  end
+  
+  def initialize
+    store["lunch_places"] = @places
+    super
   end
   # Returns a description of how to use this plugin
   def usage
