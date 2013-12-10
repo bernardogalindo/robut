@@ -25,7 +25,7 @@ class Robut::Plugin::Meme
       url = "http://v1.memecaptain.com/#{meme}.jpg"
     end
     line1, line2 = text.split(';').map { |line| CGI.escape(line.strip)}
-    meme_url = "http://memecaptain.com/i?u=#{url}&tt=#{line1}"
+    meme_url = "http://v1.memecaptain.com/i?u=#{url}&tt=#{line1}"
     meme_url += "&tb=#{line2}" if line2
     reply(meme_url)
   end
