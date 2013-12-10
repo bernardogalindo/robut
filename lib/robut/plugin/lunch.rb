@@ -1,10 +1,9 @@
 # Where should we go to lunch today?
 class Robut::Plugin::Lunch
   include Robut::Plugin
+  attr_accessor :list_places
   
-  def self.places=(place_list)
-    @places = (Array(place_list)).uniq
-  end
+  self.list_places = []
 
   # Returns a description of how to use this plugin
   def usage
@@ -61,7 +60,7 @@ class Robut::Plugin::Lunch
 
   # Returns the list of lunch places we know about.
   def places
-    store["lunch_places"] ||= @places || []
+    store["lunch_places"] ||= self.list_places || []
   end
 
   # Sets the list of lunch places to +v+
