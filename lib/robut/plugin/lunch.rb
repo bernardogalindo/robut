@@ -8,7 +8,6 @@ class Robut::Plugin::Lunch
   
   def initialize
     store["lunch_places"] = @places
-    super
   end
   # Returns a description of how to use this plugin
   def usage
