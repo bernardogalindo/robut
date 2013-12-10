@@ -5,10 +5,7 @@ class Robut::Plugin::Lunch
   def self.places=(place_list)
     @places = (Array(place_list)).uniq
   end
-  
-  def initialize
-    store["lunch_places"] = @places
-  end
+
   # Returns a description of how to use this plugin
   def usage
     [
@@ -64,7 +61,7 @@ class Robut::Plugin::Lunch
 
   # Returns the list of lunch places we know about.
   def places
-    store["lunch_places"] ||= []
+    store["lunch_places"] ||= @places || []
   end
 
   # Sets the list of lunch places to +v+
