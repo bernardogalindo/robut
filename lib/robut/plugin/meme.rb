@@ -22,7 +22,7 @@ class Robut::Plugin::Meme
     if meme.include?("://")
       url = meme
     else
-      url = "http://memecaptain.com/#{meme}.jpg"
+      url = "http://v1.memecaptain.com/#{meme}.jpg"
     end
     line1, line2 = text.split(';').map { |line| CGI.escape(line.strip)}
     meme_url = "http://memecaptain.com/i?u=#{url}&tt=#{line1}"
