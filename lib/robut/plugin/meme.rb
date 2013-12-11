@@ -23,6 +23,7 @@ class Robut::Plugin::Meme
     if meme.include?("://")
       url = meme
     else
+      query = meme.gsub(/meme/, "")
       url = Google::Search::Image.new(:query => query).first.uri
     end
     line1, line2 = text.split(';').map { |line| CGI.escape(line.strip)}
