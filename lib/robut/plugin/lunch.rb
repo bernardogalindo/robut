@@ -29,7 +29,7 @@ class Robut::Plugin::Lunch
     @@list_place = jres["response"]["venues"].collect{|venue| venue["name"] } if res.code.to_i == 200
   end
   
-  def get_venues=(options={})
+  def get_venues(options={})
     options[:location] = "ll=#{options[:location]}" if options[:location]
     default_options = {location:"near=guadalajara,jalisco,mexico"}
     options = default_options.merge(options)
@@ -41,7 +41,7 @@ class Robut::Plugin::Lunch
               "#{options[:location]}&" \
               "categoryId=4d4b7105d754a06374d81259&" \
               "query=#{options[:query]}&intent=global&limit=20")
-    Robut::Plugin::Lunch.net_connect = url
+    self.net_connect url
   end
   
   def net_connect(url)
@@ -49,7 +49,6 @@ class Robut::Plugin::Lunch
     res = Net::HTTP.start(url.host, url.port, :use_ssl => url.scheme == 'https') {|http|
       http.request(req)
     }
-    res
   end
   
   def self.my_ip
@@ -105,7 +104,7 @@ class Robut::Plugin::Lunch
       location = geocode_my_position $2
       location_string = location[0].to_s + "," + location[1].to_s
       options = {query: place, location: location_string}
-      res = self.get_venues=options
+      res = self.get_venues options
       json_response = JSON.parse( res.body )
       if res.code.to_i == 200
         venues = json_response["response"]["venues"].collect{|venue| venue["name"] } 
@@ -143,7 +142,7 @@ class Robut::Plugin::Lunch
   def geocode_my_position(q)
     q = CGI::escape(q)
     url = URI("http://maps.googleapis.com/maps/api/geocode/json?address=#{q}&sensor=true_or_false")
-    res = self.net_connect(url)
+    res = self.net_connect url
     if res.code == 200
       json_response = JSON.parse(res.body)
       lat = json_response["results"]["geomety"]["location"]["lat"] 
