@@ -171,9 +171,9 @@ class Robut::Plugin::Lunch
   def places
     #{name: "", contact: "", location: ""}, {}
     store["lunch_places"] ||= []
-    store["lunch_places"] =  @@list_place.uniq{|x| x["name"] } if store["lunch_places"].nil? || store["lunch_places"].empty?
+    store["lunch_places"] =  @@list_place.uniq{|place| place["name"] } if store["lunch_places"].nil? || store["lunch_places"].empty?
     #{lunch_places: [ {}, {}, }
-    store["lunch_places"].map{|place| place[:name]}
+    store["lunch_places"].map{|place| place["place"]}
   end
   
   def place_by_name name
