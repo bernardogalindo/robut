@@ -12,31 +12,44 @@ class Robut::Plugin::Lunch
 
   def self.default_places=(types)
     @@list_place = nil
-    res = Robut::Plugin::Lunch.get_venues={query: types}
-    json_response = JSON.parse(res.body)
-    @@list_place = json_response["response"]["venues"].collect{|venue| venue["name"] } if res.code.to_i == 200
+    options = {location:"near=guadalajara,jalisco,mexico"}
+    types =  Array(types).uniq if types
+    options[:query] =  "#{CGI::escape(types[rand(types.length)])}"
+    url = URI("https://api.foursquare.com/v2/venues/search?client_id=#{ENV['CLIENT_ID']}&"\
+              "client_secret=#{ENV['CLIENT_SECRET']}&" \
+              "v=#{Time.now.strftime('%Y%m%d')}&"\
+              "#{options[:location]}&" \
+              "categoryId=4d4b7105d754a06374d81259&" \
+              "query=#{options[:query]}&intent=global&limit=20")
+    req = Net::HTTP::Get.new(url.request_uri)
+    res = Net::HTTP.start(url.host, url.port, :use_ssl => url.scheme == 'https') {|http|
+      http.request(req)
+    }
+    jres = JSON.parse(res.body)
+    @@list_place = jres["response"]["venues"].collect{|venue| venue["name"] } if res.code.to_i == 200
   end
   
-  def self.get_venues=(options={})
+  def get_venues=(options={})
     options[:location] = "ll=#{options[:location]}" if options[:location]
     default_options = {location:"near=guadalajara,jalisco,mexico"}
     options = default_options.merge(options)
     types =  Array(options[:query]).uniq if options[:query]
     options[:query] =  "#{CGI::escape(types[rand(types.length)])}"
     url = URI("https://api.foursquare.com/v2/venues/search?client_id=#{ENV['CLIENT_ID']}&"\
-    "client_secret=#{ENV['CLIENT_SECRET']}&"\
-    "v=#{Time.now.strftime('%Y%m%d')}&"\
-    "#{options[:location]}&"\
-    "categoryId=4d4b7105d754a06374d81259&" \
-    "query=#{options[:query]}&intent=global&limit=20")
+              "client_secret=#{ENV['CLIENT_SECRET']}&" \
+              "v=#{Time.now.strftime('%Y%m%d')}&"\
+              "#{options[:location]}&" \
+              "categoryId=4d4b7105d754a06374d81259&" \
+              "query=#{options[:query]}&intent=global&limit=20")
     Robut::Plugin::Lunch.net_connect = url
   end
   
-  def self.net_connect=(url)
+  def net_connect=(url)
     req = Net::HTTP::Get.new(url.request_uri)
     res = Net::HTTP.start(url.host, url.port, :use_ssl => url.scheme == 'https') {|http|
       http.request(req)
     }
+    res
   end
   
   def self.my_ip
@@ -92,9 +105,8 @@ class Robut::Plugin::Lunch
       location = geocode_my_position $3
       location_string = location[0].to_s + "," + location[1].to_s
       options = {query: place, location: location_string}
-      res = Robut::Plugin::Lunch.get_venues=options
-      json_response = JSON.parse( res.body )
-      venues = json_response["response"]["venues"].collect{|venue| venue["name"] } if res.code.to_i == 200
+      json_response = JSON.parse(self.get_venues=options )
+      venues = json_response.body["response"]["venues"].collect{|venue| venue["name"] } if json_response.code.to_i == 200
       venues.each do |venue|
         new_place(venue)
       end
@@ -126,7 +138,7 @@ class Robut::Plugin::Lunch
   def geocode_my_position=(q)
     q = CGI::escape(q)
     url = URI("http://maps.googleapis.com/maps/api/geocode/json?address=#{q}&sensor=true_or_false")
-    res = Robut::Plugin::Lunch.net_connect(url)
+    res = self.net_connect(url)
     if res.code == 200
       json_response = JSON.parse(res.body)
       lat = json_response["results"]["geomety"]["location"]["lat"] 
