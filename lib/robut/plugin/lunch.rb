@@ -12,7 +12,6 @@ class Robut::Plugin::Lunch
 
   def self.default_places=(types)
     @@list_place = nil
-    record = {}
     records = []
     options = {location:"ll=20.677065,-103.348155"}
     types =  Array(types).uniq if types
@@ -30,14 +29,13 @@ class Robut::Plugin::Lunch
     }
     jres = JSON.parse(res.body)
     if res.code.to_i == 200
-     jres["response"]["venues"].map do |venue|
-        record["name"] = venue["name"]
-        record["contact"] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
-        if venue.has_key?("location") 
-          record["location"] = venue["location"]["address"]  
-          record["location"] += " " + venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
+     jres["response"]["venues"].each do |venue|
+        contact =  venue["contact"]["formattedPhone"] if venue.has_key?("contact")
+        if venue.has_key?("location")
+          location = venue["location"]["address"]  
+          location += " " + venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
         end
-        records << record 
+        records << {"name" => venue["name"], "location" => location, "contact" => contact} 
       end
       @@list_place = records
     end
@@ -129,17 +127,17 @@ class Robut::Plugin::Lunch
       options = {query: place, location: location_string}
       res = self.get_venues options
       json_response = JSON.parse( res.body )
-      record = {}
+ 
       venues = []
       if res.code.to_i == 200
         json_response["response"]["venues"].collect do |venue|
-          record["name"] = venue["name"]
-          record["contact"] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
+          contact = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
           if venue.has_key?("location") 
-            record["location"] = venue["location"]["address"]  
-            record["location"] += " " + venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
+            location = venue["location"]["address"]  
+            location += " " + venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
           end
-          venues << record
+          
+          venues << {"name" => venue["name"], "location" => location, "contact" => contact}
         end
         more_relevant = venues.first
         venues.each do |venue|
@@ -156,15 +154,15 @@ class Robut::Plugin::Lunch
   def new_place(place)
     store["lunch_places"] ||= []
     #{lunch_places: [{}, {}]} << {} if {lunch_places: ["", ""] + ["new"] }
-    store["lunch_places"] +=  place unless store["lunch_places"].map{|place| place[:name]}.include?(place[:name])
-    store["lunch_places"].collect{|place| place[:name]}.uniq
+    store["lunch_places"] +=  place unless store["lunch_places"].map{|place| place["name"]}.include?(place["name"])
+    store["lunch_places"].collect{|place| place["name"]}.uniq
   end
 
   # Removes +place+ from the list of lunch places.
   def remove_place(place)
     store["lunch_places"] ||= []
-    index = store["lunch_places"].map{|place| place[:name]}.index(place[:name])
-    store["lunch_places"] = store["lunch_places"].map{|place| place[:name]}.delete_at(index) unless index
+    index = store["lunch_places"].map{|place| place["name"]}.index(place["name"])
+    store["lunch_places"] = store["lunch_places"].map{|place| place["name"]}.delete_at(index) unless index
   end
 
   # Returns the list of lunch places we know about.
