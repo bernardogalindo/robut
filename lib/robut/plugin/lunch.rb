@@ -21,7 +21,7 @@ class Robut::Plugin::Lunch
     url = URI("https://api.foursquare.com/v2/venues/search?client_id=#{ENV['CLIENT_ID']}&"\
                     "client_secret=#{ENV['CLIENT_SECRET']}&" \
                     "v=#{Time.now.strftime('%Y%m%d')}&"\
-                    location.to_s \
+                    "#{location}" \
                     "categoryId=4d4b7105d754a06374d81259&" \
                     "query=#{CGI::escape(@@types[rand(@@types.length)])}&intent=global&limit=20")
     Robut::Plugin::Lunch.net_connect(url)
