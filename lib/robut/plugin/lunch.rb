@@ -1,4 +1,5 @@
 # Where should we go to lunch today?
+# encoding: UTF-8
 require 'net/http'
 require 'cgi'
 require 'json'
