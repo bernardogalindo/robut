@@ -28,7 +28,7 @@ class Robut::Plugin::Lunch
                     "#{options[:location]}&" \
                     "categoryId=4d4b7105d754a06374d81259&" \
                     "query=options[:query]&intent=global&limit=20")
-    Robut::Plugin::Lunch.net_connect(url)
+    Robut::Plugin::Lunch.net_connect = url
   end
   
   def self.net_connect=(url)
