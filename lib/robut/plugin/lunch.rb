@@ -35,7 +35,7 @@ class Robut::Plugin::Lunch
           location = venue["location"]["address"]  
           location += " " + venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
         end
-        records << {"name" => venue["name"], "location" => location, "contact" => contact} 
+        records << { "name" => venue["name"], "location" => location, "contact" => contact }
       end
       @@list_place = records
     end
