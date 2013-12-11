@@ -23,9 +23,10 @@ class Robut::Plugin::Meme
     if meme.include?("://")
       url = meme
     else
-      query = meme.gsub(/meme/, "").split('#')[0]
-      url = Google::Search::Image.new(:query => query).first.uri
-    end
+      query = meme.gsub(/meme/, "").split('#')[0]                                    
+      url = Google::Search::Image.new(:query => query).first.uri                     
+      text = text.split("#")[1]                                                                                                                                                
+    end                                                                              
     line1, line2 = text.split(';').map { |line| CGI.escape(line.strip)}
     meme_url = "http://v1.memecaptain.com/i?u=#{url}&tt=#{line1}"
     meme_url += "&tb=#{line2}" if line2
