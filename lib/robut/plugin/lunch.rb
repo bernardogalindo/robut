@@ -29,7 +29,6 @@ class Robut::Plugin::Lunch
     jres = JSON.parse(res.body)
     if res.code.to_i == 200
       @@list_place = jres["response"]["venues"].collect do |venue|
-        next unless venue.has_key?("location")
         record[:name] = venue["name"]
         record[:contact] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
         if venue.has_key?("location") 
@@ -129,7 +128,6 @@ class Robut::Plugin::Lunch
       record = {}
       if res.code.to_i == 200
         venues = json_response["response"]["venues"].collect do |venue|
-          next unless venue.has_key?("location")
           record[:name] = venue["name"]
           record[:contact] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
           if venue.has_key?("location") 
