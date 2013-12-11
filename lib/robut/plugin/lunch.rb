@@ -12,8 +12,9 @@ class Robut::Plugin::Lunch
 
   def self.default_places=(types)
     @@list_place = nil
-    json_response = JSON.parse(Robut::Plugin::Lunch.get_venues={query: types})
-    @@list_place = json_response.body["response"]["venues"].collect{|venue| venue["name"] } if json_response.code.to_i == 200
+    res = Robut::Plugin::Lunch.get_venues={query: types}
+    json_response = JSON.parse(res.body)
+    @@list_place = json_response["response"]["venues"].collect{|venue| venue["name"] } if res.code.to_i == 200
   end
   
   def self.get_venues=(options={})
@@ -54,6 +55,7 @@ class Robut::Plugin::Lunch
       "#{at_nick} lunch places - lists all the lunch places #{nick} knows about",
       "#{at_nick} new lunch place <place> - tells #{nick} about a new place to eat",
       "#{at_nick} remove lunch place <place> - tells #{nick} not to suggest <place> anymore"
+      "#{at_nick} lunch <type> near <place> - tells #{nick} to find the type of food near to <place>"
     ]
   end
 
@@ -90,8 +92,9 @@ class Robut::Plugin::Lunch
       location = geocode_my_position $3
       location_string = location[0].to_s + "," + location[1].to_s
       options = {query: place, location: location_string}
-      json_response = JSON.parse(Robut::Plugin::Lunch.get_venues=options )
-      venues = json_response.body["response"]["venues"].collect{|venue| venue["name"] } if json_response.code.to_i == 200
+      res = Robut::Plugin::Lunch.get_venues=options
+      json_response = JSON.parse( res.body )
+      venues = json_response["response"]["venues"].collect{|venue| venue["name"] } if res.code.to_i == 200
       venues.each do |venue|
         new_place(venue)
       end
