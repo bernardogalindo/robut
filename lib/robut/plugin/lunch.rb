@@ -30,11 +30,11 @@ class Robut::Plugin::Lunch
     jres = JSON.parse(res.body)
     if res.code.to_i == 200
       @@list_place = jres["response"]["venues"].collect do |venue|
-        record[:name] = venue["name"]
-        record[:contact] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
+        record["name"] = venue["name"]
+        record["contact"] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
         if venue.has_key?("location") 
-          record[:location] = venue["location"]["address"]  
-          record[:location] += " " + venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
+          record["location"] = venue["location"]["address"]  
+          record["location"] += " " + venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
         end
         record 
       end
@@ -130,11 +130,11 @@ class Robut::Plugin::Lunch
       record = {}
       if res.code.to_i == 200
         venues = json_response["response"]["venues"].collect do |venue|
-          record[:name] = venue["name"]
-          record[:contact] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
+          record["name"] = venue["name"]
+          record["contact"] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
           if venue.has_key?("location") 
-            record[:location] = venue["location"]["address"]  
-            record[:location] += " " + venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
+            record["location"] = venue["location"]["address"]  
+            record["location"] += " " + venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
           end
           record
         end
@@ -167,7 +167,7 @@ class Robut::Plugin::Lunch
   # Returns the list of lunch places we know about.
   def places
     #{name: "", contact: "", location: ""}, {}
-    store["lunch_places"] ||= Array(@@list_place) || []
+    store["lunch_places"] = store["lunch_places"] || Array(@@list_place)
     #{lunch_places: [ {}, {}, }
     store["lunch_places"].map{|place| place[:name]}
   end
