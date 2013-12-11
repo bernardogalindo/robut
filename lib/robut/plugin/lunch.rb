@@ -12,6 +12,7 @@ class Robut::Plugin::Lunch
 
   def self.default_places=(types)
     @@list_place = nil
+    record = {}
     options = {location:"near=guadalajara,jalisco,mexico"}
     types =  Array(types).uniq if types
     options[:query] =  "#{CGI::escape(types[rand(types.length)])}"
