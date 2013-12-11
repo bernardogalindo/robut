@@ -13,6 +13,7 @@ class Robut::Plugin::Lunch
   def self.default_places=(types)
     @@list_place = nil
     record = {}
+    records = []
     options = {location:"ll=20.677065,-103.348155"}
     types =  Array(types).uniq if types
     options[:query] =  "#{CGI::escape(types[rand(types.length)])}"
@@ -29,15 +30,16 @@ class Robut::Plugin::Lunch
     }
     jres = JSON.parse(res.body)
     if res.code.to_i == 200
-      @@list_place = jres["response"]["venues"].collect do |venue|
+     jres["response"]["venues"].map do |venue|
         record["name"] = venue["name"]
         record["contact"] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
         if venue.has_key?("location") 
           record["location"] = venue["location"]["address"]  
           record["location"] += " " + venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
         end
-        record 
+        records << record 
       end
+      @@list_place = records
     end
   end
   
@@ -128,15 +130,16 @@ class Robut::Plugin::Lunch
       res = self.get_venues options
       json_response = JSON.parse( res.body )
       record = {}
+      venues = []
       if res.code.to_i == 200
-        venues = json_response["response"]["venues"].collect do |venue|
+        json_response["response"]["venues"].collect do |venue|
           record["name"] = venue["name"]
           record["contact"] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
           if venue.has_key?("location") 
             record["location"] = venue["location"]["address"]  
             record["location"] += " " + venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
           end
-          record
+          venues << record
         end
         more_relevant = venues.first
         venues.each do |venue|
