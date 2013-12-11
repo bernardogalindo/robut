@@ -13,7 +13,7 @@ class Robut::Plugin::Lunch
   def self.default_places=(types)
     @@types =  Array(types).uniq
     @@list_place = nil
-    json_response = JSON.parse(Robut::Plugin::Lunch.get_venues)
+    json_response = JSON.parse(Robut::Plugin::Lunch.get_venues={})
     @@list_place = json_response.body["response"]["venues"].collect{|venue| venue["name"] } if json_response.code == 200
   end
   
