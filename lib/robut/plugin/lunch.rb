@@ -150,7 +150,7 @@ class Robut::Plugin::Lunch
   # Stores +place+ as a new lunch place.
   def new_place(place)
     store["lunch_places"] ||= []
-    store["lunch_places"] = (store["lunch_places"] + Array(place)).uniq
+    store["lunch_places"] = (store["lunch_places"] + Array(place)).uniq{|place| place[:name] }
   end
 
   # Removes +place+ from the list of lunch places.
