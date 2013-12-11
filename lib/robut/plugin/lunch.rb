@@ -24,11 +24,11 @@ class Robut::Plugin::Lunch
     types =  Array(options[:query]).uniq if options[:query]
     options[:query] =  "#{CGI::escape(types[rand(types.length)])}"
     url = URI("https://api.foursquare.com/v2/venues/search?client_id=#{ENV['CLIENT_ID']}&"\
-                    "client_secret=#{ENV['CLIENT_SECRET']}&" \
-                    "v=#{Time.now.strftime('%Y%m%d')}&"\
-                    "#{options[:location]}&" \
-                    "categoryId=4d4b7105d754a06374d81259&" \
-                    "query=#{options[:query]}&intent=global&limit=20")
+    "client_secret=#{ENV['CLIENT_SECRET']}&"\
+    "v=#{Time.now.strftime('%Y%m%d')}&"\
+    "#{options[:location]}&"\
+    "categoryId=4d4b7105d754a06374d81259&" \
+    "query=#{options[:query]}&intent=global&limit=20")
     Robut::Plugin::Lunch.net_connect = url
   end
   
