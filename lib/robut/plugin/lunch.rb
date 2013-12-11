@@ -102,7 +102,7 @@ class Robut::Plugin::Lunch
       reply "I removed \"#{place}\" from the list of lunch places"
     elsif phrase =~ /lunch (.*) near (.*)/i && sent_to_me?(message)
       place = $1
-      location = geocode_my_position $3
+      location = geocode_my_position $2
       location_string = location[0].to_s + "," + location[1].to_s
       options = {query: place, location: location_string}
       res = self.get_venues=options
@@ -113,7 +113,7 @@ class Robut::Plugin::Lunch
           new_place(venue)
         end
       else
-        reply "I don't know about any lunch #{place} near to #{$3}"
+        reply "I don't know about any lunch #{place} near to #{$2}"
       end
     end
   end
