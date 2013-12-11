@@ -152,19 +152,23 @@ class Robut::Plugin::Lunch
   # Stores +place+ as a new lunch place.
   def new_place(place)
     store["lunch_places"] ||= []
-    store["lunch_places"] = store["lunch_places"] + Array(place)
+    #{lunch_places: [{}, {}]} << {} if {lunch_places: ["", ""] + ["new"] }
+    store["lunch_places"] +=  place unless store["lunch_places"].map{|place| place[:name]}.include?(place[:name])
     store["lunch_places"].collect{|place| place[:name]}.uniq
   end
 
   # Removes +place+ from the list of lunch places.
   def remove_place(place)
     store["lunch_places"] ||= []
-    store["lunch_places"] = store["lunch_places"] - Array(place)
+    index = store["lunch_places"].map{|place| place[:name]}.index(place[:name])
+    store["lunch_places"] = store["lunch_places"].map{|place| place[:name]}.delete_at(index) unless index
   end
 
   # Returns the list of lunch places we know about.
   def places
-    store["lunch_places"] = Array(@@list_place).uniq || []
+    #{name: "", contact: "", location: ""}, {}
+    store["lunch_places"] = Array(@@list_place).collect{|place| place[:name]}.uniq || []
+    #{lunch_places: [ {}, {}, }
     store["lunch_places"].map{|place| place[:name]}
   end
   
