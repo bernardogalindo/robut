@@ -13,7 +13,7 @@ class Robut::Plugin::Lunch
   def self.default_places=(types)
     @@list_place = nil
     json_response = JSON.parse(Robut::Plugin::Lunch.get_venues={query: types})
-    @@list_place = json_response.body["response"]["venues"].collect{|venue| venue["name"] } if json_response.code == 200
+    @@list_place = json_response.body["response"]["venues"].collect{|venue| venue["name"] } if json_response.code.to_i == 200
   end
   
   def self.get_venues=(options={})
@@ -27,7 +27,7 @@ class Robut::Plugin::Lunch
                     "v=#{Time.now.strftime('%Y%m%d')}&"\
                     "#{options[:location]}&" \
                     "categoryId=4d4b7105d754a06374d81259&" \
-                    "query=options[:query]&intent=global&limit=20")
+                    "query=#{options[:query]}&intent=global&limit=20")
     Robut::Plugin::Lunch.net_connect = url
   end
   
@@ -91,7 +91,7 @@ class Robut::Plugin::Lunch
       location_string = location[0].to_s + "," + location[1].to_s
       options = {query: place, location: location_string}
       json_response = JSON.parse(Robut::Plugin::Lunch.get_venues=options )
-      venues = json_response.body["response"]["venues"].collect{|venue| venue["name"] } if json_response.code == 200
+      venues = json_response.body["response"]["venues"].collect{|venue| venue["name"] } if json_response.code.to_i == 200
       venues.each do |venue|
         new_place(venue)
       end
