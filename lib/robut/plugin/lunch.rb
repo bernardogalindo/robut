@@ -21,7 +21,7 @@ class Robut::Plugin::Lunch
               "v=#{Time.now.strftime('%Y%m%d')}&"\
               "#{options[:location]}&" \
               "categoryId=4d4b7105d754a06374d81259&" \
-              "query=#{options[:query]}&intent=browse&limit=10")
+              "query=#{options[:query]}")
     req = Net::HTTP::Get.new(url.request_uri)
     res = Net::HTTP.start(url.host, url.port, :use_ssl => url.scheme == 'https') {|http|
       http.request(req)
@@ -52,7 +52,7 @@ class Robut::Plugin::Lunch
               "v=#{Time.now.strftime('%Y%m%d')}&"\
               "#{options[:location]}&" \
               "categoryId=4d4b7105d754a06374d81259&" \
-              "query=#{options[:query]}&intent=browse&limit=10")
+              "query=#{options[:query]}")
     self.net_connect url
   end
   
@@ -79,6 +79,7 @@ class Robut::Plugin::Lunch
       "#{at_nick} lunch places - lists all the lunch places #{nick} knows about",
       "#{at_nick} new lunch place <place> - tells #{nick} about a new place to eat",
       "#{at_nick} remove lunch place <place> - tells #{nick} not to suggest <place> anymore",
+      "#{at_nick} where is this place <place> - tells #{nick} to tell you where is the <place>".
       "#{at_nick} lunch <type> near <place> - tells #{nick} to find the <type> of food near to <place>"
     ]
   end
@@ -168,7 +169,12 @@ class Robut::Plugin::Lunch
   end
   
   def place_by_name name
-    store["lunch_places"].select{|place| place[:location] + "," + place[:contact] if place[:name] == name}
+    store["lunch_places"].select do |place|
+      next unless place[:name] == name
+      res = place[:location] if place[:location]
+      res += "," + place[:contact] if place[:contact]
+      res
+    end
   end
 
   # Sets the list of lunch places to +v+
