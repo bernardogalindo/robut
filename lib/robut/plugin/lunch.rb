@@ -16,14 +16,16 @@ class Robut::Plugin::Lunch
     @@list_place = json_response.body["response"]["venues"].collect{|venue| venue["name"] } if json_response.code == 200
   end
   
-  def self.get_venues=(query=nil, position=nil)
-    location = position.nil? ? "near=guadalajara,jalisco,mexico&" : "ll=#{position}"
+  def self.get_venues=(options={})
+    options[:position] = "ll=#{options[:position]}"
+    default_options = {query: "query=#{CGI::escape(@@types[rand(@@types.length)])}", location:"near=guadalajara,jalisco,mexico"}
+    options = default_options.merge(options)
     url = URI("https://api.foursquare.com/v2/venues/search?client_id=#{ENV['CLIENT_ID']}&"\
                     "client_secret=#{ENV['CLIENT_SECRET']}&" \
                     "v=#{Time.now.strftime('%Y%m%d')}&"\
-                    "#{location}" \
+                    "#{options[:location]}&" \
                     "categoryId=4d4b7105d754a06374d81259&" \
-                    "query=#{CGI::escape(@@types[rand(@@types.length)])}&intent=global&limit=20")
+                    "options[:query]&intent=global&limit=20")
     Robut::Plugin::Lunch.net_connect(url)
   end
   
@@ -85,7 +87,8 @@ class Robut::Plugin::Lunch
       place = $1
       location = geocode_my_position $3
       location_string = location[0].to_s + "," + location[1].to_s
-      json_response = JSON.parse(Robut::Plugin::Lunch.get_venues=(place, location_string))
+      options = {query: place, location: location_string}
+      json_response = JSON.parse(Robut::Plugin::Lunch.get_venues=options )
       venues = json_response.body["response"]["venues"].collect{|venue| venue["name"] } if json_response.code == 200
       venues.each do |venue|
         new_place(venue)
