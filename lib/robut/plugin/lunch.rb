@@ -139,11 +139,11 @@ class Robut::Plugin::Lunch
           
           venues << {"name" => venue["name"], "location" => location, "contact" => contact}
         end
-        more_relevant = venues.first
+        more_relevant = venues.select{|place| place['name'] && place['location']}.first
         venues.each do |venue|
           new_place(venue)
         end
-        reply "Ok, I'll add \"#{place}\" places to the the list of lunch places. I recommend you to go to \"#{more_relevant} \""
+        reply "Ok, I'll add \"#{place}\" places to the the list of lunch places. I recommend you to go to \"#{more_relevant['name']\" at \"#{more_relevant['location']\""
       else
         reply "I don't know about any lunch #{place} near to #{$2}"
       end
