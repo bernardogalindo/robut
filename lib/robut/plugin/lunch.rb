@@ -44,7 +44,7 @@ class Robut::Plugin::Lunch
     Robut::Plugin::Lunch.net_connect = url
   end
   
-  def net_connect=(url)
+  def net_connect(url)
     req = Net::HTTP::Get.new(url.request_uri)
     res = Net::HTTP.start(url.host, url.port, :use_ssl => url.scheme == 'https') {|http|
       http.request(req)
