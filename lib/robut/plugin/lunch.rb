@@ -19,7 +19,7 @@ class Robut::Plugin::Lunch
   
   def self.get_venues=(options={})
     options[:location] = "ll=#{options[:location]}" if options.key(:location)
-    default_options = {query: "#{CGI::escape(@@types[rand(@@types.length)])}", location:"near=guadalajara,jalisco,mexico"}
+    default_options = {query: "#{CGI::escape(@@types[rand(@@types.length)])}", location:"near=guadalajara,jalisco,mexico"}
     options = default_options.merge(options)
     url = URI("https://api.foursquare.com/v2/venues/search?client_id=#{ENV['CLIENT_ID']}&"\
                     "client_secret=#{ENV['CLIENT_SECRET']}&" \
