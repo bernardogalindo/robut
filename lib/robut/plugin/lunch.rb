@@ -99,7 +99,7 @@ class Robut::Plugin::Lunch
       place = $1
       remove_place(place)
       reply "I removed \"#{place}\" from the list of lunch places"
-    elsif phrase =~ /lunch (.*) near (.*)/i && sent_to_me?(message)
+    elsif phrase =~ /lunch (.*) near to (.*)/i && sent_to_me?(message)
       place = $1
       location = geocode_my_position $2
       location_string = location[0].to_s + "," + location[1].to_s
@@ -111,6 +111,7 @@ class Robut::Plugin::Lunch
         venues.each do |venue|
           new_place(venue)
         end
+        reply "Ok, I'll add \"#{place}\" places to the the list of lunch places. I recommend you to go to \"#{store['lunch_places']}.last \""
       else
         reply "I don't know about any lunch #{place} near to #{$2}"
       end
@@ -131,7 +132,7 @@ class Robut::Plugin::Lunch
 
   # Returns the list of lunch places we know about.
   def places
-    store["lunch_places"] ||= @@list_place
+    store["lunch_places"] << @@list_place 
   end
 
   # Sets the list of lunch places to +v+
