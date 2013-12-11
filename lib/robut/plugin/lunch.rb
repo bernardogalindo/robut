@@ -141,7 +141,7 @@ class Robut::Plugin::Lunch
   
   def geocode_my_position(q)
     q = CGI::escape(q)
-    url = URI("http://maps.googleapis.com/maps/api/geocode/json?address=#{q}&sensor=true_or_false")
+    url = URI("http://maps.googleapis.com/maps/api/geocode/json?address=#{q}&sensor=true")
     res = self.net_connect url
     if res.code.to_i == 200
       json_response = JSON.parse(res.body)
