@@ -167,7 +167,7 @@ class Robut::Plugin::Lunch
   # Returns the list of lunch places we know about.
   def places
     #{name: "", contact: "", location: ""}, {}
-    store["lunch_places"] = store["lunch_places"] || Array(@@list_place)
+    store["lunch_places"] = Array(@@list_place) if store["lunch_places"].empty
     #{lunch_places: [ {}, {}, }
     store["lunch_places"].map{|place| place[:name]}
   end
