@@ -19,7 +19,7 @@ class Robut::Plugin::Meme
 
   desc "meme <meme> <line1>;<line2> - responds with a link to a generated <meme> image using <line1> and <line2>.  " +
     "See http://memecaptain.com/ for a list of memes.  You can also pass a link to your own image as the meme."
-  match /^meme (\S+) (.*)$/, :sent_to_me => true do |meme, text|
+  match /^meme (\S+)(#| )(.*)$/, :sent_to_me => true do |meme, text|
     if meme.include?("://")
       url = meme
     else
