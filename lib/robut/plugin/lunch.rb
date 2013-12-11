@@ -13,13 +13,14 @@ class Robut::Plugin::Lunch
   def self.default_places=(types)
     @@list_place = nil
     record = {}
-    options = {location:"near=guadalajara,jalisco,mexico"}
+    options = {location:"ll=20.677065,-103.348155"}
     types =  Array(types).uniq if types
     options[:query] =  "#{CGI::escape(types[rand(types.length)])}"
     url = URI("https://api.foursquare.com/v2/venues/search?client_id=#{ENV['CLIENT_ID']}&"\
               "client_secret=#{ENV['CLIENT_SECRET']}&" \
               "v=#{Time.now.strftime('%Y%m%d')}&"\
               "#{options[:location]}&" \
+              "radius=4000&"\
               "categoryId=4d4b7105d754a06374d81259&" \
               "query=#{options[:query]}")
     req = Net::HTTP::Get.new(url.request_uri)
@@ -42,7 +43,7 @@ class Robut::Plugin::Lunch
   
   def get_venues(options={})
     options[:location] = "ll=#{options[:location]}" if options[:location]
-    default_options = {location:"near=guadalajara,jalisco,mexico"}
+    default_options = {location:"ll=20.677065,-103.348155"}
     options = default_options.merge(options)
     types =  Array(options[:query]).uniq if options[:query]
     options[:query] =  "#{CGI::escape(types[rand(types.length)])}"
@@ -50,6 +51,7 @@ class Robut::Plugin::Lunch
               "client_secret=#{ENV['CLIENT_SECRET']}&" \
               "v=#{Time.now.strftime('%Y%m%d')}&"\
               "#{options[:location]}&" \
+              "radius=4000&"\
               "categoryId=4d4b7105d754a06374d81259&" \
               "query=#{options[:query]}")
     self.net_connect url
