@@ -26,7 +26,15 @@ class Robut::Plugin::Lunch
       http.request(req)
     }
     jres = JSON.parse(res.body)
-    @@list_place = jres["response"]["venues"].collect{|venue| venue["name"] } if res.code.to_i == 200
+    if res.code.to_i == 200
+      @@list_place = jres["response"]["venues"].collect do |venue|
+        next unless venue.has_key?("location") &&venue["location"]["city"].downcase = "guadalajara"
+        record[:name] = venue["name"]
+        record[:contact] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
+        record[:location] = venue["location"]["address"] + venue["location"]["crossStreet"] if venue.has_key?("location")
+        record 
+      end
+    end
   end
   
   def get_venues(options={})
