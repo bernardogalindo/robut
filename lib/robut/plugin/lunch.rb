@@ -145,8 +145,8 @@ class Robut::Plugin::Lunch
     res = self.net_connect url
     if res.code.to_i == 200
       json_response = JSON.parse(res.body)
-      lat = json_response["results"]["geomety"]["location"]["lat"] 
-      lng = json_response["results"]["geomety"]["location"]["lng"]
+      lat = json_response["results"].first["geometry"]["location"]["lat"] 
+      lng = json_response["results"].first["geometry"]["location"]["lng"]
       [lat, lng]
     end
   end
