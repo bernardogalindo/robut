@@ -20,7 +20,7 @@ class Robut::Plugin::Lunch
               "v=#{Time.now.strftime('%Y%m%d')}&"\
               "#{options[:location]}&" \
               "categoryId=4d4b7105d754a06374d81259&" \
-              "query=#{options[:query]}&intent=global&limit=10")
+              "query=#{options[:query]}&intent=browse&limit=10")
     req = Net::HTTP::Get.new(url.request_uri)
     res = Net::HTTP.start(url.host, url.port, :use_ssl => url.scheme == 'https') {|http|
       http.request(req)
@@ -28,7 +28,7 @@ class Robut::Plugin::Lunch
     jres = JSON.parse(res.body)
     if res.code.to_i == 200
       @@list_place = jres["response"]["venues"].collect do |venue|
-        next unless venue.has_key?("location") && venue["location"]["city"].downcase == "guadalajara"
+        next unless venue.has_key?("location")
         record[:name] = venue["name"]
         record[:contact] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
         record[:location] = venue["location"]["address"] + venue["location"]["crossStreet"] if venue.has_key?("location")
@@ -48,7 +48,7 @@ class Robut::Plugin::Lunch
               "v=#{Time.now.strftime('%Y%m%d')}&"\
               "#{options[:location]}&" \
               "categoryId=4d4b7105d754a06374d81259&" \
-              "query=#{options[:query]}&intent=global&limit=10")
+              "query=#{options[:query]}&intent=browse&limit=10")
     self.net_connect url
   end
   
