@@ -1,4 +1,5 @@
 require 'cgi'
+require 'google-search'
 
 # A simple plugin that wraps memecaptain.
 # This plugin is activated when robut is sent a message starting
@@ -22,7 +23,7 @@ class Robut::Plugin::Meme
     if meme.include?("://")
       url = meme
     else
-      url = "http://v1.memecaptain.com/#{meme}.jpg"
+      url = Google::Search::Image.new(:query => query).first.uri
     end
     line1, line2 = text.split(';').map { |line| CGI.escape(line.strip)}
     meme_url = "http://v1.memecaptain.com/i?u=#{url}&tt=#{line1}"
