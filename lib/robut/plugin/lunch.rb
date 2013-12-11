@@ -34,7 +34,7 @@ class Robut::Plugin::Lunch
         record[:contact] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
         if venue.has_key?("location") 
           record[:location] = venue["location"]["address"]  
-          record[:location] += venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
+          record[:location] += " " + venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
         end
         record 
       end
@@ -134,7 +134,7 @@ class Robut::Plugin::Lunch
           record[:contact] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
           if venue.has_key?("location") 
             record[:location] = venue["location"]["address"]  
-            record[:location] += venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
+            record[:location] += " " + venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
           end
           record
         end
@@ -172,7 +172,7 @@ class Robut::Plugin::Lunch
     store["lunch_places"].select do |place|
       next unless place[:name] == name
       res = place[:location] if place[:location]
-      res += "," + place[:contact] if place[:contact]
+      res += ", " + place[:contact] if place[:contact]
       res
     end
   end
