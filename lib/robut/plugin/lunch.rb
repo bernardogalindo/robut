@@ -105,10 +105,15 @@ class Robut::Plugin::Lunch
       location = geocode_my_position $3
       location_string = location[0].to_s + "," + location[1].to_s
       options = {query: place, location: location_string}
-      json_response = JSON.parse(self.get_venues=options )
-      venues = json_response.body["response"]["venues"].collect{|venue| venue["name"] } if json_response.code.to_i == 200
-      venues.each do |venue|
-        new_place(venue)
+      res = self.get_venues=options
+      json_response = JSON.parse( res.body )
+      if res.code.to_i == 200
+        venues = json_response["response"]["venues"].collect{|venue| venue["name"] } 
+        venues.each do |venue|
+          new_place(venue)
+        end
+      else
+        reply "I don't know about any lunch #{place} near to #{$3}"
       end
     end
   end
