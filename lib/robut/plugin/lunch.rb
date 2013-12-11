@@ -32,7 +32,10 @@ class Robut::Plugin::Lunch
         next unless venue.has_key?("location")
         record[:name] = venue["name"]
         record[:contact] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
-        record[:location] = venue["location"]["address"] + venue["location"]["crossStreet"] if venue.has_key?("location")
+        if venue.has_key?("location") 
+          record[:location] = venue["location"]["address"]  
+          record[:location] += venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
+        end
         record 
       end
     end
