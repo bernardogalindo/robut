@@ -168,7 +168,7 @@ class Robut::Plugin::Lunch
   end
   
   def place_by_name name
-    store["lunch_places"].select{|place| place[:location] + "," + place[:contact] if [place[:name] == name}
+    store["lunch_places"].select{|place| place[:location] + "," + place[:contact] if place[:name] == name}
   end
 
   # Sets the list of lunch places to +v+
