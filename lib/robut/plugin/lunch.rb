@@ -111,6 +111,13 @@ class Robut::Plugin::Lunch
       place = $1
       remove_place(place)
       reply "I removed \"#{place}\" from the list of lunch places"
+    elsif phrase =~ /where is this place (.*)/i && sent_to_me?(message)
+      place = place_by_name $1
+      if place
+        reply place
+      else
+        reply "I don't know; what you talkin about; eat whereever you want!"
+      end
     elsif phrase =~ /lunch (.*) near to (.*)/i && sent_to_me?(message)
       place = $1
       location = geocode_my_position $2
@@ -118,8 +125,18 @@ class Robut::Plugin::Lunch
       options = {query: place, location: location_string}
       res = self.get_venues options
       json_response = JSON.parse( res.body )
+      record = {}
       if res.code.to_i == 200
-        venues = json_response["response"]["venues"].collect{|venue| venue["name"] }
+        venues = json_response["response"]["venues"].collect do |venue|
+          next unless venue.has_key?("location")
+          record[:name] = venue["name"]
+          record[:contact] = venue["contact"]["formattedPhone"] if venue.has_key?("contact")
+          if venue.has_key?("location") 
+            record[:location] = venue["location"]["address"]  
+            record[:location] += venue["location"]["crossStreet"] if venue["location"]["crossStreet"]
+          end
+          record
+        end
         more_relevant = venues.first
         venues.each do |venue|
           new_place(venue)
@@ -147,12 +164,18 @@ class Robut::Plugin::Lunch
   def places
     store["lunch_places"] ||= []
     store["lunch_places"] = Array(store["lunch_places"] + @@list_place).uniq if @@list_place
+    store["lunch_places"].map{|place| place[:name]}
+  end
+  
+  def place_by_name name
+    store["lunch_places"].select{|place| place[:location] + "," + place[:contact] if [place[:name] == name}
   end
 
   # Sets the list of lunch places to +v+
   def places=(v)
     store["lunch_places"] = v
   end
+  
   
   def geocode_my_position(q)
     q = CGI::escape(q)
