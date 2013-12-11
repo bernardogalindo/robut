@@ -107,11 +107,12 @@ class Robut::Plugin::Lunch
       res = self.get_venues options
       json_response = JSON.parse( res.body )
       if res.code.to_i == 200
-        venues = json_response["response"]["venues"].collect{|venue| venue["name"] } 
+        venues = json_response["response"]["venues"].collect{|venue| venue["name"] }
+        more_relevant = venues.first
         venues.each do |venue|
           new_place(venue)
         end
-        reply "Ok, I'll add \"#{place}\" places to the the list of lunch places. I recommend you to go to \"#{store['lunch_places'].last} \""
+        reply "Ok, I'll add \"#{place}\" places to the the list of lunch places. I recommend you to go to \"#{more_relevant} \""
       else
         reply "I don't know about any lunch #{place} near to #{$2}"
       end
