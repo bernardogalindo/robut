@@ -135,7 +135,7 @@ class Robut::Plugin::Lunch
     store["lunch_places"] = v
   end
   
-  def geocode_my_position=(q)
+  def geocode_my_position(q)
     q = CGI::escape(q)
     url = URI("http://maps.googleapis.com/maps/api/geocode/json?address=#{q}&sensor=true_or_false")
     res = self.net_connect(url)
