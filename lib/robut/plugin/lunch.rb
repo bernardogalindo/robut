@@ -11,16 +11,17 @@ class Robut::Plugin::Lunch
   end
 
   def self.default_places=(types)
-    @@types =  Array(types).uniq
     @@list_place = nil
-    json_response = JSON.parse(Robut::Plugin::Lunch.get_venues={})
+    json_response = JSON.parse(Robut::Plugin::Lunch.get_venues={query: types})
     @@list_place = json_response.body["response"]["venues"].collect{|venue| venue["name"] } if json_response.code == 200
   end
   
   def self.get_venues=(options={})
     options[:location] = "ll=#{options[:location]}" if options.key(:location)
-    default_options = {query: "#{CGI::escape(@@types[rand(@@types.length)])}", location:"near=guadalajara,jalisco,mexico"}
+    default_options = {location:"near=guadalajara,jalisco,mexico"}
     options = default_options.merge(options)
+    types =  Array(options[:query]).uniq
+    options[:query] =  "#{CGI::escape(types[rand(types.length)])}"
     url = URI("https://api.foursquare.com/v2/venues/search?client_id=#{ENV['CLIENT_ID']}&"\
                     "client_secret=#{ENV['CLIENT_SECRET']}&" \
                     "v=#{Time.now.strftime('%Y%m%d')}&"\
