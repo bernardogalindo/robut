@@ -79,7 +79,7 @@ class Robut::Plugin::Lunch
       "#{at_nick} lunch places - lists all the lunch places #{nick} knows about",
       "#{at_nick} new lunch place <place> - tells #{nick} about a new place to eat",
       "#{at_nick} remove lunch place <place> - tells #{nick} not to suggest <place> anymore",
-      "#{at_nick} where is this place <place> - tells #{nick} to tell you where is the <place>".
+      "#{at_nick} where is this place <place> - tells #{nick} to tell you where is the <place>",
       "#{at_nick} lunch <type> near <place> - tells #{nick} to find the <type> of food near to <place>"
     ]
   end
