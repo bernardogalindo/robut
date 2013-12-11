@@ -111,7 +111,7 @@ class Robut::Plugin::Lunch
         venues.each do |venue|
           new_place(venue)
         end
-        reply "Ok, I'll add \"#{place}\" places to the the list of lunch places. I recommend you to go to \"#{store['lunch_places']}.last \""
+        reply "Ok, I'll add \"#{place}\" places to the the list of lunch places. I recommend you to go to \"#{store['lunch_places'].last} \""
       else
         reply "I don't know about any lunch #{place} near to #{$2}"
       end
